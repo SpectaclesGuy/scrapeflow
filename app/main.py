@@ -9,6 +9,7 @@ from app.routes.jobs import router as jobs_router
 from app.routes.projects import router as projects_router
 from app.routes.users import router as users_router
 from app.utils.response import error_response, success_response
+from app.routes import planner
 
 settings = get_settings()
 app = FastAPI(title=settings.app_name)
@@ -48,3 +49,4 @@ app.include_router(projects_router)
 app.include_router(conversations_router)
 app.include_router(context_router)
 app.include_router(jobs_router)
+app.include_router(planner.router)
