@@ -73,3 +73,6 @@ poetry.lock
 # Alembic temporary files
 alembic/__pycache__/
 alembic/versions/__pycache__/
+
+context.md
+instructions.md

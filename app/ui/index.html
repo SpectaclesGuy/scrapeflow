@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ScrapeFlow Test Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <div class="brand-mark">SF</div>
+        <div>
+          <p class="eyebrow">ScrapeFlow Context Service</p>
+          <h1>Render Test Console</h1>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <a class="ghost-link" href="/docs" target="_blank" rel="noreferrer">Open API Docs</a>
+        <div id="healthBadge" class="status-pill pending">Checking health</div>
+      </div>
+    </header>
+
+    <main class="workspace-grid">
+      <aside class="panel side-panel">
+        <div class="panel-header">
+          <p class="eyebrow">Workspace Bootstrap</p>
+          <h2>Seed a live test flow</h2>
+        </div>
+
+        <form id="workspaceForm" class="stack-md">
+          <label>
+            <span>User name</span>
+            <input id="userName" name="userName" type="text" value="Mayank Tester" required>
+          </label>
+          <label>
+            <span>User email</span>
+            <input id="userEmail" name="userEmail" type="email" value="mayank.tester@example.com" required>
+          </label>
+          <label>
+            <span>Project name</span>
+            <input id="projectName" name="projectName" type="text" value="Review Harvest Lab" required>
+          </label>
+          <label>
+            <span>Conversation title</span>
+            <input id="conversationTitle" name="conversationTitle" type="text" value="Discovery chat" required>
+          </label>
+          <button id="createWorkspaceBtn" class="primary-button" type="submit">Create workspace on live API</button>
+        </form>
+
+        <div class="divider"></div>
+
+        <section class="stack-sm">
+          <p class="eyebrow">Live identifiers</p>
+          <div class="identity-list">
+            <div class="identity-item"><span>User</span><code id="userId">Not created</code></div>
+            <div class="identity-item"><span>Project</span><code id="projectId">Not created</code></div>
+            <div class="identity-item"><span>Conversation</span><code id="conversationId">Not created</code></div>
+          </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section class="stack-sm">
+          <p class="eyebrow">Testing checklist</p>
+          <ul class="checklist">
+            <li>Create a user, project, and conversation.</li>
+            <li>Send a natural-language extraction prompt.</li>
+            <li>Verify the context card updates target URL, entity, fields, and export format.</li>
+            <li>Reload messages and context to confirm persistence in Neon.</li>
+          </ul>
+        </section>
+      </aside>
+
+      <section class="panel main-panel">
+        <div class="panel-header row-between">
+          <div>
+            <p class="eyebrow">Conversation Driver</p>
+            <h2>Exercise the planner-style context update flow</h2>
+          </div>
+          <div class="small-meta">Base URL: <code id="baseUrl"></code></div>
+        </div>
+
+        <div class="prompt-bank">
+          <button class="sample-pill" data-prompt="extract laptops from https://example.com and include price and rating and export as excel">Laptop catalog</button>
+          <button class="sample-pill" data-prompt="collect reviews from https://trustpilot.com for air purifiers and include rating, date, verified status, and export as json">Reviews</button>
+          <button class="sample-pill" data-prompt="scrape property listings from https://example.org and include city, rent, area, and contact number">Listings</button>
+        </div>
+
+        <form id="messageForm" class="message-composer">
+          <textarea id="messageContent" rows="5" placeholder="Type a message that should update the live project context..." required></textarea>
+          <div class="composer-actions">
+            <button id="refreshContextBtn" type="button" class="secondary-button">Refresh context</button>
+            <button id="sendMessageBtn" type="submit" class="primary-button">Send message to live API</button>
+          </div>
+        </form>
+
+        <div class="content-grid">
+          <section class="subpanel">
+            <div class="subpanel-header row-between">
+              <h3>Message timeline</h3>
+              <button id="reloadMessagesBtn" type="button" class="text-button">Reload</button>
+            </div>
+            <div id="messageList" class="message-list empty-state">Create a workspace and send a message to begin.</div>
+          </section>
+
+          <section class="subpanel">
+            <div class="subpanel-header row-between">
+              <h3>Structured project context</h3>
+              <span id="contextVersion" class="version-chip">v0</span>
+            </div>
+            <div id="contextCard" class="context-card empty-state">No context loaded yet.</div>
+          </section>
+        </div>
+      </section>
+
+      <aside class="panel right-panel">
+        <div class="panel-header">
+          <p class="eyebrow">Response Log</p>
+          <h2>What the backend returned</h2>
+        </div>
+
+        <div id="activityFeed" class="activity-feed"></div>
+
+        <div class="divider"></div>
+
+        <section class="stack-sm">
+          <p class="eyebrow">Current route map</p>
+          <ul class="endpoint-list">
+            <li><code>POST /users</code></li>
+            <li><code>POST /projects</code></li>
+            <li><code>POST /conversations</code></li>
+            <li><code>POST /conversations/{id}/messages</code></li>
+            <li><code>GET /projects/{id}/context</code></li>
+          </ul>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <template id="messageTemplate">
+    <article class="message-card">
+      <div class="message-meta">
+        <span class="message-role"></span>
+        <span class="message-time"></span>
+      </div>
+      <p class="message-body"></p>
+    </article>
+  </template>
+
+  <script src="/assets/app.js" defer></script>
+</body>
+</html>

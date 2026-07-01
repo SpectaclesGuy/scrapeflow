@@ -14,6 +14,8 @@ The core design rule is that `project_context` is the source of truth. Raw `mess
 - `alembic/` contains migration configuration and an initial schema revision.
 - `tests/` contains pytest coverage for the main lifecycle flows.
 - `render.yaml` contains the Render deployment configuration.
+- `context.md` contains project functionality and code context.
+- `instructions.md` contains team setup and Git workflow instructions.
 
 ## Setup
 
@@ -76,6 +78,11 @@ The configured Render flow is:
 - Python version: `3.11.11`
 
 For production, schema changes should go through Alembic. The app no longer creates tables automatically at startup.
+
+## Additional docs
+
+- See `context.md` for project context, core behavior, and code structure.
+- See `instructions.md` for local setup, Git workflow, and team development instructions.
 
 ## API examples
 

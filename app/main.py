@@ -1,5 +1,8 @@
+from pathlib import Path
+
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.config import get_settings
 from app.routes.context import router as context_router
@@ -11,6 +14,8 @@ from app.utils.response import error_response, success_response
 
 settings = get_settings()
 app = FastAPI(title=settings.app_name)
+ui_dir = Path(__file__).parent / "ui"
+app.mount("/assets", StaticFiles(directory=ui_dir), name="assets")
 
 
 @app.exception_handler(HTTPException)
@@ -27,6 +32,11 @@ async def unhandled_exception_handler(_: Request, exc: Exception) -> JSONRespons
         status_code=500,
         content=error_response(str(exc)),
     )
+
+
+@app.get("/", include_in_schema=False)
+def index() -> FileResponse:
+    return FileResponse(ui_dir / "index.html")
 
 
 @app.get("/health")

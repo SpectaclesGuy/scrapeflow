@@ -112,3 +112,8 @@ def test_update_job_status(client):
     response = client.patch(f"/jobs/{job_id}", json={"status": "running"})
     assert response.status_code == 200
     assert response.json()["data"]["status"] == "running"
+
+def test_root_ui(client):
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "ScrapeFlow Test Console" in response.text
