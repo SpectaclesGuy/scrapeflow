@@ -2,7 +2,6 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 from app.config import get_settings
-from app.database import Base, engine
 from app.routes.context import router as context_router
 from app.routes.conversations import router as conversations_router
 from app.routes.jobs import router as jobs_router
@@ -12,11 +11,6 @@ from app.utils.response import error_response, success_response
 
 settings = get_settings()
 app = FastAPI(title=settings.app_name)
-
-
-@app.on_event("startup")
-def on_startup() -> None:
-    Base.metadata.create_all(bind=engine)
 
 
 @app.exception_handler(HTTPException)
