@@ -1,0 +1,7 @@
+.table-controls { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.data-table { width: 100%; border-collapse: collapse; min-width: 760px; }
+.data-table th, .data-table td { padding: 16px 18px; text-align: left; border-bottom: 1px solid var(--border); }
+.data-table th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-soft); background: #f8fafc; }
+.data-table tr:hover td { background: rgba(37,99,235,0.03); }
+.table-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.pagination-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 16px; }

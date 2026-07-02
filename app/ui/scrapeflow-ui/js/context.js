@@ -1,0 +1,19 @@
+(function () {
+  const ui = window.ScrapeFlowUI;
+  const api = window.ScrapeFlowAPI;
+  document.addEventListener("DOMContentLoaded", async () => {
+    const main = ui.shell("context", "Context editor", "Review and refine the structured project state before you generate the extraction plan.");
+    if (!main || !ui.requireAuth()) return;
+    const projectId = new URLSearchParams(window.location.search).get("project") || ui.getActiveProject()?.id;
+    if (!projectId) { main.innerHTML = `<div class='empty-state'>Open a project first.</div>`; return; }
+    let context = await api.getProjectContext(projectId);
+    function safeJson(value) { try { return value ? JSON.parse(value) : null; } catch { return null; } }
+    function draw() {
+      main.innerHTML = `<section class='card'><div class='card-header'><p class='eyebrow'>Editable project context</p><h2 style='margin:0;font-size:22px'>Version ${context.version}</h2></div><div class='card-body'><form id='contextForm' class='form-grid'><div class='field'><label>Target URL</label><input name='target_url' value='${ui.escapeHtml(context.target_url || "")}'></div><div class='field'><label>Entity</label><input name='entity' value='${ui.escapeHtml(context.entity || "")}'></div><div class='field'><label>Fields</label><input name='fields' value='${ui.escapeHtml((context.fields || []).join(", "))}'></div><div class='field'><label>Filters</label><input name='filters' value='${ui.escapeHtml((context.filters || []).map((item) => typeof item === "string" ? item : JSON.stringify(item)).join(", "))}'></div><div class='field'><label>Pagination</label><input name='pagination' value='${ui.escapeHtml(JSON.stringify(context.pagination || {}))}'></div><div class='field'><label>Export format</label><select name='export_format'><option ${context.export_format === "json" ? "selected" : ""}>json</option><option ${context.export_format === "csv" ? "selected" : ""}>csv</option><option ${context.export_format === "excel" ? "selected" : ""}>excel</option></select></div><div class='field'><label>Authentication required</label><select name='auth_required'><option value='false' ${!context.auth_required ? "selected" : ""}>No</option><option value='true' ${context.auth_required ? "selected" : ""}>Yes</option></select></div><div class='field'><label>Schedule</label><input name='schedule' value='${ui.escapeHtml(JSON.stringify(context.schedule || {}))}'></div><div class='field' style='grid-column:1 / -1'><label>JSON preview</label><textarea readonly>${ui.escapeHtml(JSON.stringify(context, null, 2))}</textarea></div><div class='form-actions' style='grid-column:1 / -1'><button class='button' type='submit'>Save</button><button class='button-secondary' type='button' id='refreshContext'>Refresh</button><button class='button-ghost' type='button' id='resetContext'>Reset</button></div></form></div></section>`;
+      main.querySelector("#contextForm").addEventListener("submit", async (event) => { event.preventDefault(); const form = new FormData(event.currentTarget); const payload = { target_url: form.get("target_url") || null, entity: form.get("entity") || null, fields: String(form.get("fields") || "").split(",").map((item) => item.trim()).filter(Boolean), filters: String(form.get("filters") || "").split(",").map((item) => item.trim()).filter(Boolean), pagination: safeJson(form.get("pagination")), auth_required: form.get("auth_required") === "true", export_format: form.get("export_format"), schedule: safeJson(form.get("schedule")) }; context = await api.updateProjectContext(projectId, payload); ui.toast("Context saved", "success"); draw(); });
+      main.querySelector("#refreshContext").addEventListener("click", async () => { context = await api.getProjectContext(projectId); draw(); });
+      main.querySelector("#resetContext").addEventListener("click", () => draw());
+    }
+    draw();
+  });
+})();

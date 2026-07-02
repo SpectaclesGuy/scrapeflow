@@ -1,0 +1,13 @@
+.chat-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 18px; }
+.chat-thread { display: grid; gap: 14px; max-height: 62vh; overflow: auto; padding-right: 4px; }
+.message-bubble { padding: 16px 18px; border-radius: 18px; border: 1px solid var(--border); box-shadow: var(--shadow-soft); max-width: 88%; }
+.message-bubble.user { margin-left: auto; background: #dbeafe; border-color: #bfdbfe; }
+.message-bubble.assistant { background: white; }
+.message-role { font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-soft); margin-bottom: 8px; }
+.message-content { margin: 0; line-height: 1.75; white-space: pre-wrap; }
+.composer { display: grid; gap: 12px; }
+.context-panel { display: grid; gap: 14px; align-content: start; }
+.context-chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.context-chip { padding: 8px 10px; border-radius: 999px; background: var(--surface-muted); color: var(--accent); font-weight: 600; font-size: 13px; }
+.timeline-log { display: grid; gap: 12px; }
+@media (max-width: 960px) { .chat-layout { grid-template-columns: 1fr; } }

@@ -9,12 +9,12 @@ from app.schemas.job_schema import JobCreate, JobUpdate
 def create_job(db: Session, payload: JobCreate) -> Job:
     project = db.get(Project, payload.project_id)
     if project is None:
-        raise ValueError("Project not found")
+        raise ValueError('Project not found')
 
     if payload.conversation_id:
         conversation = db.get(Conversation, payload.conversation_id)
         if conversation is None:
-            raise ValueError("Conversation not found")
+            raise ValueError('Conversation not found')
 
     job = Job(**payload.model_dump())
     db.add(job)
@@ -37,3 +37,7 @@ def update_job(db: Session, job: Job, payload: JobUpdate) -> Job:
 
 def list_project_jobs(db: Session, project_id: str) -> list[Job]:
     return db.query(Job).filter(Job.project_id == project_id).order_by(Job.created_at).all()
+
+
+def list_jobs(db: Session) -> list[Job]:
+    return db.query(Job).order_by(Job.created_at).all()
