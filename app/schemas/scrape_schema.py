@@ -1,12 +1,12 @@
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field, HttpUrl, field_validator
+from pydantic import BaseModel, Field, field_validator
 
 
 FieldType = Literal['text', 'attribute', 'href', 'src', 'html']
 ModeType = Literal['auto', 'http', 'browser']
 PaginationType = Literal['none', 'next_button', 'url_pattern']
-SLMProviderType = Literal['mock', 'external_http', 'openai_compatible', 'ollama_compatible']
+SLMProviderType = Literal['mock', 'gemini', 'external_http', 'openai_compatible', 'ollama_compatible']
 
 
 class ScrapeField(BaseModel):
@@ -27,15 +27,15 @@ class PaginationConfig(BaseModel):
 
 class BrowserConfig(BaseModel):
     headless: bool = True
-    wait_until: str = 'networkidle'
-    timeout: int = 30000
+    wait_until: str = 'load'
+    timeout: int = 45000
     wait_for_selector: str | None = None
 
 
 class SLMConfig(BaseModel):
     enabled: bool = True
-    provider: SLMProviderType = 'mock'
-    model: str = 'mock-scrapeflow-slm'
+    provider: SLMProviderType = 'gemini'
+    model: str = 'gemini-3.5-flash'
     max_input_chars: int = 12000
 
 

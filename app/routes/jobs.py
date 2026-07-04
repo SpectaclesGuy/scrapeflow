@@ -1,3 +1,5 @@
+import asyncio
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -7,6 +9,7 @@ from app.schemas.scrape_schema import JobResultResponse, ScrapeJobConfig
 from app.services.job_service import create_job, get_job, list_jobs, list_project_jobs, update_job
 from app.services.scraper_service import run_scrape_job
 from app.utils.response import success_response
+from app.workers.job_runner import run_job_background
 
 router = APIRouter(tags=['jobs'])
 
@@ -47,6 +50,18 @@ def patch_job_route(job_id: str, payload: JobUpdate, db: Session = Depends(get_d
 def list_project_jobs_route(project_id: str, db: Session = Depends(get_db)) -> dict:
     jobs = [JobRead.model_validate(item).model_dump() for item in list_project_jobs(db, project_id)]
     return success_response('Jobs fetched successfully', jobs)
+
+
+@router.post('/jobs/{job_id}/start')
+async def start_job_route(job_id: str, db: Session = Depends(get_db)) -> dict:
+    job = get_job(db, job_id)
+    if job is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Job not found')
+    if not job.config:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Job has no config')
+    updated = update_job(db, job, JobUpdate(status='queued', progress=0, error_message=None))
+    asyncio.create_task(run_job_background(updated.id))
+    return success_response('Job started', JobRead.model_validate(updated).model_dump())
 
 
 @router.post('/jobs/{job_id}/run')

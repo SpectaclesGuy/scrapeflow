@@ -6,25 +6,25 @@ from sqlalchemy.orm import Session
 from app.models.project_context import ProjectContext
 from app.schemas.context_schema import ProjectContextUpdate
 
-URL_PATTERN = re.compile(r"(https?://[^\s]+)")
-FORMAT_PATTERN = re.compile(r"\b(excel|csv|json)\b", re.IGNORECASE)
+URL_PATTERN = re.compile(r'(https?://[^\s]+)')
+FORMAT_PATTERN = re.compile(r'\b(excel|csv|json)\b', re.IGNORECASE)
 FIELD_PATTERN = re.compile(
-    r"(?:include|add|also include)\s+([a-z0-9_\-\s,]+?)(?:\b(?:and export|export|with|where|that|for)\b|$)",
+    r'(?:include|add|also include)\s+([a-z0-9_\-\s,]+?)(?:\b(?:and export|export|with|where|that|for)\b|$)',
     re.IGNORECASE,
 )
 EXTRACT_FIELD_PATTERN = re.compile(
-    r"\bextract\s+([a-z0-9_\-]+)(?:\s*(?:,|and|$))",
+    r'\bextract\s+([a-z0-9_\-]+)(?:\s*(?:,|and|$))',
     re.IGNORECASE,
 )
 FILTER_PATTERN = re.compile(
-    r"\b([a-z0-9_\-\s]+?)\s+(above|below|greater than|less than|under|over|minimum|maximum)\s+([a-z0-9_\-\s]+)",
+    r'\b([a-z0-9_\-\s]+?)\s+(above|below|greater than|less than|under|over|minimum|maximum)\s+([a-z0-9_\-\s]+)',
     re.IGNORECASE,
 )
 ENTITY_PATTERN = re.compile(
-    r"\b(?:extract|scrape|get|find)\s+([a-z][a-z0-9_\-\s]+?)(?:\s+from|\s+with|\s+where|\s+that|\s*$)",
+    r'\b(?:extract|scrape|get|find)\s+([a-z][a-z0-9_\-\s]+?)(?:\s+from|\s+with|\s+where|\s+that|\s*$)',
     re.IGNORECASE,
 )
-STOPWORDS = {"and", "the", "a", "an", "all", "also", "include", "extract", "add"}
+STOPWORDS = {'and', 'the', 'a', 'an', 'all', 'also', 'include', 'extract', 'add'}
 
 
 def get_context(db: Session, project_id: str) -> ProjectContext | None:
@@ -58,10 +58,6 @@ def patch_context(
 
 
 def update_context_from_message(project_context: ProjectContext, message: str) -> ProjectContext:
-    """
-    Rule-based temporary context updater.
-    Later this can be replaced by Planner Agent / LLM integration.
-    """
     text = message.strip()
     if not text:
         project_context.version += 1
@@ -69,7 +65,7 @@ def update_context_from_message(project_context: ProjectContext, message: str) -
 
     url_match = URL_PATTERN.search(text)
     if url_match:
-        target_url = url_match.group(1).rstrip(".,)")
+        target_url = url_match.group(1).rstrip('.,)')
         project_context.target_url = target_url
         parsed = urlparse(target_url)
         project_context.domain = parsed.netloc or project_context.domain
@@ -81,7 +77,7 @@ def update_context_from_message(project_context: ProjectContext, message: str) -
     fields = list(project_context.fields or [])
     for match in FIELD_PATTERN.finditer(text):
         phrase = match.group(1)
-        for raw_field in re.split(r",| and ", phrase):
+        for raw_field in re.split(r',| and ', phrase):
             field = normalize_token(raw_field)
             if field and field not in fields:
                 fields.append(field)
@@ -96,7 +92,7 @@ def update_context_from_message(project_context: ProjectContext, message: str) -
         field = normalize_token(match.group(1))
         operator = match.group(2).lower()
         value = match.group(3).strip()
-        candidate = {"field": field, "operator": operator, "value": value}
+        candidate = {'field': field, 'operator': operator, 'value': value}
         if field and candidate not in filters:
             filters.append(candidate)
     project_context.filters = filters
@@ -110,9 +106,18 @@ def update_context_from_message(project_context: ProjectContext, message: str) -
     return project_context
 
 
+def build_clarification_questions(project_context: ProjectContext) -> list[str]:
+    questions: list[str] = []
+    if not project_context.target_url:
+        questions.append('What is the target URL you want me to extract from?')
+    if not project_context.fields:
+        questions.append('Which fields should I extract from the page?')
+    return questions
+
+
 def normalize_token(value: str) -> str | None:
-    token = re.sub(r"[^a-z0-9_\-\s]", " ", value.lower())
-    token = " ".join(part for part in token.split() if part not in STOPWORDS)
+    token = re.sub(r'[^a-z0-9_\-\s]', ' ', value.lower())
+    token = ' '.join(part for part in token.split() if part not in STOPWORDS)
     return token or None
 
 
@@ -121,4 +126,4 @@ def normalize_entity(value: str) -> str | None:
     if not entity:
         return None
     words = entity.split()
-    return " ".join(words[:3])
+    return ' '.join(words[:3])

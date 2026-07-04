@@ -1,19 +1,19 @@
 from __future__ import annotations
 
 from bs4 import BeautifulSoup
+from uuid import uuid4
 
 from app.schemas.job_schema import JobUpdate
 from app.schemas.result_schema import JobRunSummary
 from app.schemas.scrape_schema import ScrapeJobConfig
-from app.services.browser_service import get_page_with_browser, render_page
+from app.services.browser_service import render_page, render_pages_with_browser
 from app.services.evidence_service import build_field_evidence
-from app.services.extraction_service import detect_failed_fields, extract_records_from_html, extract_records_from_page
+from app.services.extraction_service import detect_failed_fields, extract_records_from_html
 from app.services.fetch_service import fetch_html
-from app.services.pagination_service import generate_paginated_urls, paginate_with_browser
+from app.services.pagination_service import generate_paginated_urls
 from app.services.schema_alignment_service import normalize_records_with_slm
 from app.services.selector_repair_service import repair_failed_selectors
 from app.services.storage_service import save_csv, save_evidence, save_json
-from uuid import uuid4
 
 
 def should_use_browser(html: str, config: ScrapeJobConfig) -> bool:
@@ -71,15 +71,17 @@ async def run_scrape_job(config: ScrapeJobConfig, job=None, db=None) -> JobRunSu
 
     try:
         if config.mode == 'browser':
-            page = await get_page_with_browser(config.target_url, config.browser.model_dump())
-            pages = await paginate_with_browser(page, config)
-            for page_number, browser_page in enumerate(pages, start=1):
-                page_records = await extract_records_from_page(browser_page, config, page_number)
-                html = await browser_page.content()
-                all_records.extend(await _apply_slm_repairs(page_records, html, config, browser_page.url, page_number))
+            page_snapshots = await render_pages_with_browser(
+                config.target_url,
+                config.browser.model_dump(),
+                config.pagination.model_dump(),
+            )
+            for page_number, snapshot in enumerate(page_snapshots, start=1):
+                html = snapshot['html']
+                source_url = snapshot['url']
+                page_records = extract_records_from_html(html, config, source_url, page_number)
+                all_records.extend(await _apply_slm_repairs(page_records, html, config, source_url, page_number))
                 pages_processed += 1
-            await page._scrapeflow_browser.close()
-            await page._scrapeflow_playwright.stop()
         else:
             urls = [config.target_url]
             if config.pagination.enabled and config.pagination.type == 'url_pattern' and config.pagination.url_pattern:

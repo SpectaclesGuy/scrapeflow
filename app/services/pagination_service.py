@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from app.services.browser_service import get_page_with_browser
-
 
 async def paginate_with_browser(page, config):
     pages = [page]

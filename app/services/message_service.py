@@ -6,28 +6,50 @@ from app.schemas.message_schema import MessageCreate
 from app.services.context_service import get_context, update_context_from_message
 
 
-def create_message(db: Session, conversation_id: str, payload: MessageCreate) -> tuple[Message, object]:
+def store_message(
+    db: Session,
+    conversation_id: str,
+    role: str,
+    content: str,
+    metadata: dict | None = None,
+    update_context: bool = False,
+) -> tuple[Message, object | None]:
     conversation = db.get(Conversation, conversation_id)
     if conversation is None:
-        raise ValueError("Conversation not found")
+        raise ValueError('Conversation not found')
 
     message = Message(
         conversation_id=conversation_id,
-        role=payload.role,
-        content=payload.content,
-        meta=payload.metadata,
+        role=role,
+        content=content,
+        meta=metadata,
     )
     db.add(message)
 
-    project_context = get_context(db, conversation.project_id)
-    if project_context is None:
-        raise ValueError("Project context not found")
+    project_context = None
+    if update_context:
+        project_context = get_context(db, conversation.project_id)
+        if project_context is None:
+            raise ValueError('Project context not found')
+        update_context_from_message(project_context, content)
 
-    update_context_from_message(project_context, payload.content)
     db.commit()
     db.refresh(message)
-    db.refresh(project_context)
+    if project_context is not None:
+        db.refresh(project_context)
     return message, project_context
+
+
+def create_message(db: Session, conversation_id: str, payload: MessageCreate) -> tuple[Message, object | None]:
+    return store_message(
+        db,
+        conversation_id=conversation_id,
+        role=payload.role,
+        content=payload.content,
+        metadata=payload.metadata,
+        update_context=payload.role == 'user',
+    )
+
 
 
 def list_messages(db: Session, conversation_id: str) -> list[Message]:

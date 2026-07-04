@@ -1,7 +1,7 @@
 def create_user(client):
     response = client.post(
         '/users',
-        json={'name': 'John Doe', 'email': 'test@example.com', 'password_hash': 'hashed'},
+        json={'name': 'Mayank', 'email': 'mayank@example.com', 'password_hash': 'hashedpassword'},
     )
     assert response.status_code == 200
     return response.json()['data']
@@ -38,10 +38,31 @@ def test_health_check(client):
 
 
 
+def test_signup_login_and_session(client):
+    signup = client.post('/auth/signup', json={'name': 'Asha', 'email': 'asha@example.com', 'password': 'securepass1'})
+    assert signup.status_code == 200
+    assert signup.json()['data']['email'] == 'asha@example.com'
+
+    me = client.get('/auth/me')
+    assert me.status_code == 200
+    assert me.json()['data']['name'] == 'Asha'
+
+    logout = client.post('/auth/logout')
+    assert logout.status_code == 200
+    assert client.get('/auth/me').status_code == 401
+
+    login = client.post('/auth/login', json={'email': 'asha@example.com', 'password': 'securepass1'})
+    assert login.status_code == 200
+    assert login.json()['data']['email'] == 'asha@example.com'
+
+
+
 def test_create_user(client):
     user = create_user(client)
     assert user['name'] == 'Mayank'
     assert user['email'] == 'mayank@example.com'
+    fetched = client.get(f"/users/{user['id']}")
+    assert 'password_hash' not in fetched.json()['data']
 
 
 

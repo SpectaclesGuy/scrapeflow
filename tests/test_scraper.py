@@ -28,6 +28,18 @@ SAMPLE_HTML = """
 </html>
 """
 
+FALLBACK_HTML = """
+<html>
+  <body>
+    <div data-component-type="s-search-result" data-asin="ABC123">
+      <h2><span class="a-size-base-plus">Noise Cancelling Headphones</span></h2>
+      <span class="a-price"><span class="a-offscreen">?9,999</span></span>
+      <span class="a-icon-alt">4.3 out of 5 stars</span>
+    </div>
+  </body>
+</html>
+"""
+
 
 def build_config(project_id: str | None = 'project_001') -> ScrapeJobConfig:
     return ScrapeJobConfig.model_validate(
@@ -45,7 +57,7 @@ def build_config(project_id: str | None = 'project_001') -> ScrapeJobConfig:
             ],
             'pagination': {'enabled': False, 'type': 'none', 'max_pages': 1},
             'browser': {'headless': True, 'wait_until': 'networkidle', 'timeout': 30000},
-            'slm': {'enabled': True, 'provider': 'mock', 'model': 'mock-scrapeflow-slm', 'max_input_chars': 12000},
+            'slm': {'enabled': True, 'provider': 'gemini', 'model': 'gemini-3.5-flash', 'max_input_chars': 12000},
             'output': {'formats': ['json', 'csv'], 'include_evidence': True},
         }
     )
@@ -56,9 +68,36 @@ def test_extract_records_and_detect_failed_fields():
     config = build_config()
     records = extract_records_from_html(SAMPLE_HTML, config, 'https://example.com/products', 1)
     assert records[0]['data']['title'] == 'Laptop A'
-    assert records[0]['data']['price'] == ''
+    assert records[0]['data']['price'] is None
     failed = detect_failed_fields(records[0], config)
     assert failed == ['price']
+
+
+
+def test_extract_records_falls_back_to_common_commerce_containers():
+    config = ScrapeJobConfig.model_validate(
+        {
+            'job_id': 'job_002',
+            'project_id': 'project_001',
+            'target_url': 'https://example.com/search',
+            'mode': 'http',
+            'entity': 'product',
+            'container_selector': '.non-existent-card',
+            'fields': [
+                {'name': 'title', 'selector': '.a-size-base-plus', 'type': 'text', 'required': True},
+                {'name': 'price', 'selector': '.a-price .a-offscreen', 'type': 'text', 'required': True},
+                {'name': 'rating', 'selector': '.a-icon-alt', 'type': 'text', 'required': False},
+            ],
+            'pagination': {'enabled': False, 'type': 'none', 'max_pages': 1},
+            'browser': {'headless': True, 'wait_until': 'load', 'timeout': 45000},
+            'slm': {'enabled': False, 'provider': 'mock', 'model': 'mock', 'max_input_chars': 12000},
+            'output': {'formats': ['json'], 'include_evidence': False},
+        }
+    )
+    records = extract_records_from_html(FALLBACK_HTML, config, 'https://example.com/search', 1)
+    assert len(records) == 1
+    assert records[0]['data']['title'] == 'Noise Cancelling Headphones'
+    assert records[0]['data']['price'] == '?9,999'
 
 
 
@@ -72,7 +111,9 @@ def test_preprocess_html_removes_noise():
 
 
 
-def test_selector_repair_flow_recovers_price():
+def test_selector_repair_flow_recovers_price(monkeypatch):
+    monkeypatch.delenv('GEMINI_API_KEY', raising=False)
+    get_settings.cache_clear()
     config = build_config()
     repair = __import__('asyncio').run(repair_failed_selectors(SAMPLE_HTML, config, ['price']))
     assert repair['suggested_selectors']['price'] == '.wrong-price-class'
@@ -109,6 +150,7 @@ def test_should_use_browser_heuristics():
 
 def test_run_scrape_job_with_mock_fetch(monkeypatch, tmp_path):
     monkeypatch.setenv('OUTPUT_DIR', str(tmp_path))
+    monkeypatch.delenv('GEMINI_API_KEY', raising=False)
     get_settings.cache_clear()
 
     async def fake_fetch_html(url: str, timeout: int = 30) -> str:
@@ -126,6 +168,7 @@ def test_run_scrape_job_with_mock_fetch(monkeypatch, tmp_path):
 
 def test_scrape_run_endpoint(client, monkeypatch, tmp_path):
     monkeypatch.setenv('OUTPUT_DIR', str(tmp_path))
+    monkeypatch.delenv('GEMINI_API_KEY', raising=False)
     get_settings.cache_clear()
 
     async def fake_fetch_html(url: str, timeout: int = 30) -> str:
@@ -142,8 +185,9 @@ def test_scrape_run_endpoint(client, monkeypatch, tmp_path):
 
 def test_job_run_and_results_endpoint(client, monkeypatch, tmp_path):
     monkeypatch.setenv('OUTPUT_DIR', str(tmp_path))
+    monkeypatch.delenv('GEMINI_API_KEY', raising=False)
     get_settings.cache_clear()
-    user = client.post('/users', json={'name': 'Mayank', 'email': 'jobs@example.com', 'password_hash': 'hashed'}).json()['data']
+    user = client.post('/users', json={'name': 'Mayank', 'email': 'jobs@example.com', 'password_hash': 'hashedpass1'}).json()['data']
     project = client.post(
         '/projects',
         json={'user_id': user['id'], 'name': 'Laptop Scraper', 'description': 'Collect listings'},

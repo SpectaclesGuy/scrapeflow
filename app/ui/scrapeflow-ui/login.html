@@ -1,2 +1,43 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Login | ScrapeFlow</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ui/css/style.css"><link rel="stylesheet" href="/ui/css/forms.css"></head><body data-public="true"><div class="auth-shell"><div class="card auth-card"><p class="eyebrow">Welcome back</p><h1 style="margin:0 0 12px;font-size:34px">Login to ScrapeFlow</h1><p class="page-subtitle">Sign in to manage projects, jobs, and exports.</p><form id="loginForm" class="section-grid" style="margin-top:24px"><div class="field"><label>Email</label><input type="email" name="email" placeholder="name@company.com" required></div><div class="field"><label>Password</label><input type="password" name="password" placeholder="Minimum 8 characters" required></div><div class="inline-field-row" style="justify-content:space-between"><label class="checkbox-row"><input type="checkbox" name="remember"> Remember me</label><a class="page-subtitle" href="#">Forgot password</a></div><div id="loginError" class="validation-error hidden"></div><div class="auth-actions"><button class="button" type="submit">Login</button><button class="button-secondary" type="button" id="googleLogin">Google login</button></div><p class="page-subtitle">No account yet? <a href="/signup.html" style="color:var(--accent);font-weight:600">Create one</a>.</p></form></div></div><script src="/ui/js/config.js"></script><script src="/ui/js/mock.js"></script><script src="/ui/js/api.js"></script><script src="/ui/js/utils.js"></script><script src="/ui/js/auth.js"></script><script>document.getElementById('loginForm').addEventListener('submit',async(event)=>{event.preventDefault();const error=document.getElementById('loginError');error.classList.add('hidden');try{await window.ScrapeFlowAuth.login(new FormData(event.currentTarget));window.ScrapeFlowUI.toast('Logged in successfully','success');setTimeout(()=>window.location.href='/dashboard.html',300);}catch(err){error.textContent=err.message;error.classList.remove('hidden');}});document.getElementById('googleLogin').addEventListener('click',()=>window.ScrapeFlowUI.toast('Google login placeholder clicked.','success'));</script></body></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login | ScrapeFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/ui/css/style.css">
+    <link rel="stylesheet" href="/ui/css/forms.css">
+  </head>
+  <body data-public="true">
+    <div class="auth-shell">
+      <div class="card auth-card compact-auth-card">
+        <p class="eyebrow">Secure access</p>
+        <h1 class="auth-title">Sign in</h1>
+        <p class="page-subtitle">Access ScrapeFlow by RaioQuantum.</p>
+        <form id="loginForm" class="section-grid auth-form-stack">
+          <div class="field"><label>Email</label><input type="email" name="email" placeholder="name@company.com" required></div>
+          <div class="field"><label>Password</label><input type="password" name="password" placeholder="Your password" required></div>
+          <div id="loginError" class="validation-error hidden"></div>
+          <div class="auth-actions auth-actions-stacked">
+            <button class="button" type="submit">Sign in</button>
+            <button class="button-secondary" type="button" id="googleLogin">Continue with Google</button>
+          </div>
+          <p class="page-subtitle">New here? <a class="inline-link" href="/signup">Create an account</a>.</p>
+        </form>
+      </div>
+    </div>
+    <script src="/ui/js/config.js"></script><script src="/ui/js/mock.js"></script><script src="/ui/js/api.js"></script><script src="/ui/js/utils.js"></script><script src="/ui/js/auth.js"></script>
+    <script>
+      document.getElementById('loginForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const error = document.getElementById('loginError');
+        error.classList.add('hidden');
+        try { await window.ScrapeFlowAuth.login(new FormData(event.currentTarget)); window.location.href = '/chat'; }
+        catch (err) { error.textContent = err.message; error.classList.remove('hidden'); }
+      });
+      document.getElementById('googleLogin').addEventListener('click', () => window.ScrapeFlowAuth.beginGoogleLogin());
+    </script>
+  </body>
+</html>

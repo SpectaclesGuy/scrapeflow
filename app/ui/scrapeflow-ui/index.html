@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ScrapeFlow | Conversational Web Infrastructure</title>
+  <title>ScrapeFlow | RaioQuantum</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -14,226 +14,38 @@
   <header class="landing-header">
     <a href="/" style="display:flex;align-items:center;gap:14px">
       <img src="/ui/assets/logo.svg" alt="ScrapeFlow logo" style="height:30px;width:auto">
+      <div style="display:grid;gap:2px"><strong>ScrapeFlow</strong><span style="font-size:12px;color:var(--text-soft)">by RaioQuantum</span></div>
     </a>
     <nav class="landing-nav">
-      <a href="/dashboard.html">Platform</a>
-      <a href="/projects.html">Solutions</a>
+      <a href="/chat">Platform</a>
+      <a href="/projects">Solutions</a>
       <a href="/docs" target="_blank" rel="noreferrer">Documentation</a>
-      <a href="/signup.html">Pricing</a>
+      <a href="/login">Pricing</a>
     </nav>
-    <a class="button" href="/signup.html">Start a project</a>
+    <a class="button" href="/login">Start a project</a>
   </header>
-
   <main class="landing-main">
     <section class="landing-section landing-hero">
       <div>
         <span class="landing-kicker">Conversational web infrastructure</span>
         <h1 class="landing-display">Turn any part of the web into a reliable API.</h1>
         <p class="landing-copy">Build resilient data pipelines using natural language. No more brittle selectors or manually maintained crawlers.</p>
-        <div class="landing-actions">
-          <a class="button" href="/signup.html">Get Started</a>
-          <a class="button-secondary" href="/docs" target="_blank" rel="noreferrer">View Docs</a>
-        </div>
+        <div class="landing-actions"><a class="button" href="/login">Get Started</a><a class="button-secondary" href="/docs" target="_blank" rel="noreferrer">View Docs</a></div>
       </div>
-      <div class="landing-preview">
-        <div class="landing-windowbar"><span></span><span></span><span></span></div>
-        <div class="landing-preview-card">
-          <div class="eyebrow" style="margin-bottom:10px">Parse Agent</div>
-          <p style="margin:0;color:var(--text-muted);font-size:14px;line-height:1.6"><em>"Extract the pricing table from the target URL and normalize the currency to USD."</em></p>
-        </div>
-        <div class="landing-code">
-<pre style="margin:0;font-size:14px;line-height:1.7">{
+      <div class="landing-preview"><div class="landing-windowbar"><span></span><span></span><span></span></div><div class="landing-preview-card"><div class="eyebrow" style="margin-bottom:10px">Parse Agent</div><p style="margin:0;color:var(--text-muted);font-size:14px;line-height:1.6"><em>"Extract the pricing table from the target URL and normalize the currency to USD."</em></p></div><div class="landing-code"><pre style="margin:0;font-size:14px;line-height:1.7">{
   "status": "active",
   "records": [
     { "tier": "Basic", "price": 29.00 },
     { "tier": "Pro",   "price": 99.00 }
   ],
   "last_crawl": "2024-05-21T14:22:00Z"
-}</pre>
-          <div class="landing-pulse">Crawling real-time</div>
-        </div>
-      </div>
+}</pre><div class="landing-pulse">Crawling real-time</div></div></div>
     </section>
-
-    <section class="landing-section landing-quote">
-      <blockquote>“The web was designed to be read.<br>Parse++ makes it programmable.”</blockquote>
-    </section>
-
-    <section class="landing-section">
-      <div style="max-width:560px">
-        <span class="landing-kicker">Workflow</span>
-        <h2 class="landing-heading">Engineering a bridge from human intent to machine data.</h2>
-      </div>
-      <div class="landing-workflow-grid">
-        <article class="landing-step">
-          <code>01 / Describe</code>
-          <h3>Natural Intent</h3>
-          <p>Simply describe the data you need in plain English. Our system interprets the site structure and visual cues.</p>
-        </article>
-        <article class="landing-step">
-          <code>02 / Refine</code>
-          <h3>Visual Mapping</h3>
-          <p>The agent identifies elements and proposes a schema. You refine with a single click in the workspace.</p>
-        </article>
-        <article class="landing-step">
-          <code>03 / Run</code>
-          <h3>Cloud Scaling</h3>
-          <p>Agents execute at scale across infrastructure designed for dynamic pages, authentication flows, and retries.</p>
-        </article>
-        <article class="landing-step">
-          <code>04 / Deliver</code>
-          <h3>API Endpoint</h3>
-          <p>Access your data via webhooks, REST APIs, or exports formatted exactly how your downstream systems expect it.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="landing-section landing-dark">
-      <div style="max-width:720px;position:relative;z-index:1">
-        <span class="landing-kicker">Architecture</span>
-        <h2 class="landing-heading" style="color:#f3f0e9;font-style:italic">The Workspace. Built for Precision.</h2>
-      </div>
-      <div class="landing-workspace" style="position:relative;z-index:1">
-        <div class="landing-workspace-shell">
-          <div class="landing-rail">
-            <span></span><span></span><span></span><span></span>
-          </div>
-          <div class="landing-workspace-main">
-            <div class="landing-workspace-top">
-              <h3 style="margin:0;font-family:'EB Garamond',serif;font-size:30px;font-weight:400">Project: E-commerce_Intelligence_v4</h3>
-              <div class="landing-actions">
-                <span class="badge" style="background:var(--accent-soft);color:var(--accent-strong)">Agent: Active</span>
-                <span class="kbd" style="background:rgba(255,255,255,0.08);border-color:rgba(243,240,233,0.16);color:#f3f0e9">52.4k req/hr</span>
-              </div>
-            </div>
-            <div class="landing-workspace-grid">
-              <div class="landing-workspace-canvas">
-                <div style="text-align:center;color:rgba(243,240,233,0.62)">
-                  <div style="font-size:56px;line-height:1">?</div>
-                  <div style="margin-top:12px;font-size:14px">Real-time parsing visualization loading…</div>
-                </div>
-              </div>
-              <div class="landing-metrics">
-                <div class="landing-metric"><div class="eyebrow" style="color:rgba(243,240,233,0.54);margin-bottom:8px">Data sanity</div><div style="font-family:'EB Garamond',serif;font-size:34px">99.98%</div></div>
-                <div class="landing-metric"><div class="eyebrow" style="color:rgba(243,240,233,0.54);margin-bottom:8px">Recovery rate</div><div style="font-family:'EB Garamond',serif;font-size:34px">12ms avg</div></div>
-                <div class="landing-metric"><div class="eyebrow" style="color:rgba(243,240,233,0.54);margin-bottom:8px">Latency</div><div style="font-family:'EB Garamond',serif;font-size:34px">1.2s</div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="landing-section">
-      <div style="text-align:center;max-width:680px;margin:0 auto 40px">
-        <span class="landing-kicker">Specialized agents</span>
-        <h2 class="landing-heading">Choose the right engine for the task.</h2>
-      </div>
-      <div class="landing-agent-grid">
-        <article class="landing-agent-card">
-          <div class="landing-agent-icon"></div>
-          <h3>Template-Based</h3>
-          <p>Perfect for sites with stable layouts. High-speed, low-cost extraction using deterministic structural rules.</p>
-          <a class="landing-linkline" href="/signup.html">Learn more</a>
-        </article>
-        <article class="landing-agent-card">
-          <div class="landing-agent-icon"></div>
-          <h3>Adaptive AI</h3>
-          <p>Heuristic engines that adapt to UI changes automatically. No more broken scrapers when the DOM changes.</p>
-          <a class="landing-linkline" href="/signup.html">Learn more</a>
-        </article>
-        <article class="landing-agent-card">
-          <div class="landing-agent-icon"></div>
-          <h3>Headless Fleet</h3>
-          <p>Full browser emulation for complex SPAs. Executes JavaScript, solves challenges, and waits for interactions.</p>
-          <a class="landing-linkline" href="/signup.html">Learn more</a>
-        </article>
-      </div>
-    </section>
-
-    <section class="landing-section">
-      <div class="landing-evidence-layout">
-        <div class="landing-evidence">
-          <span class="landing-kicker">Evidence &amp; verification</span>
-          <h3>Total data provenance.</h3>
-          <p>Every record returned by Parse++ includes a cryptographic link to its source. Audit the exact HTML fragment, timestamp, and visual location of any data point.</p>
-          <div class="landing-checks">
-            <div class="landing-check"><span>Source verification via immutable snapshots.</span></div>
-            <div class="landing-check"><span>Automatic outlier and anomaly detection.</span></div>
-            <div class="landing-check"><span>Schema validation before delivery.</span></div>
-          </div>
-        </div>
-        <div class="landing-evidence-card">
-          <div class="landing-evidence-bar">
-            <span>Inspector: record_0492</span>
-            <span>×</span>
-          </div>
-          <div class="landing-evidence-body">
-            <div class="card" style="background:var(--surface);padding:16px;display:flex;gap:14px;align-items:center">
-              <div style="width:44px;height:44px;border-radius:6px;background:var(--accent-soft);display:grid;place-items:center">?</div>
-              <div>
-                <div style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px">Value: "$1,200.00"</div>
-                <div style="font-size:14px;color:var(--text-muted)">Extracted from &lt;span class="price-val"&gt;</div>
-              </div>
-            </div>
-            <div class="landing-snippet">
-<pre style="margin:0;font-size:13px;line-height:1.7">&lt;div class="product-header"&gt;
-  &lt;h1&gt;Architectural Minimalist Desk&lt;/h1&gt;
-  &lt;div class="price-container"&gt;
-    &lt;span class="price-currency"&gt;$&lt;/span&gt;
-    &lt;span class="price-val"&gt;1,200.00&lt;/span&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</pre>
-            </div>
-            <div style="display:flex;justify-content:space-between;gap:16px;align-items:center;color:var(--text-soft);font-size:13px">
-              <span><em>Captured 2s ago from cloud-node-nyc-04</em></span>
-              <a href="/signup.html" style="text-transform:uppercase;letter-spacing:0.12em">View full trace</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="landing-section landing-cta">
-      <h2>Ready to build the programmable web?</h2>
-      <p>Join forward-thinking engineering teams scaling their data operations with ScrapeFlow.</p>
-      <div class="landing-actions" style="justify-content:center">
-        <a class="button" href="/signup.html">Start Free Trial</a>
-        <a class="button-secondary" href="/login.html">Talk to Sales</a>
-      </div>
-    </section>
+    <section class="landing-section landing-quote"><blockquote>“The web was designed to be read.<br>ScrapeFlow makes it programmable.”</blockquote></section>
+    <section class="landing-section"><div style="max-width:560px"><span class="landing-kicker">Workflow</span><h2 class="landing-heading">Engineering a bridge from human intent to machine data.</h2></div><div class="landing-workflow-grid"><article class="landing-step"><code>01 / Describe</code><h3>Natural Intent</h3><p>Simply describe the data you need in plain English. Our system interprets the site structure and visual cues.</p></article><article class="landing-step"><code>02 / Clarify</code><h3>Visual Mapping</h3><p>The agent asks only what is missing, then proposes a schema you can refine inside the workspace.</p></article><article class="landing-step"><code>03 / Run</code><h3>Cloud Scaling</h3><p>Agents execute at scale across infrastructure designed for dynamic pages, authentication flows, and retries.</p></article><article class="landing-step"><code>04 / Deliver</code><h3>API Endpoint</h3><p>Access your data via webhooks, REST APIs, or exports formatted exactly how your downstream systems expect it.</p></article></div></section>
+    <section class="landing-section landing-dark"><div style="max-width:720px;position:relative;z-index:1"><span class="landing-kicker">Architecture</span><h2 class="landing-heading" style="color:#f3f0e9;font-style:italic">The Workspace. Built for Precision.</h2></div><div class="landing-workspace" style="position:relative;z-index:1"><div class="landing-workspace-shell"><div class="landing-rail"><span></span><span></span><span></span><span></span></div><div class="landing-workspace-main"><div class="landing-workspace-top"><h3 style="margin:0;font-family:'EB Garamond',serif;font-size:30px;font-weight:400">ScrapeFlow Workspace</h3><div class="landing-actions"><span class="badge" style="background:var(--accent-soft);color:var(--accent-strong)">Agent: Active</span><span class="kbd" style="background:rgba(255,255,255,0.08);border-color:rgba(243,240,233,0.16);color:#f3f0e9">52.4k req/hr</span></div></div><div class="landing-workspace-grid"><div class="landing-workspace-canvas"><div style="text-align:center;color:rgba(243,240,233,0.62)"><div style="font-size:56px;line-height:1">?</div><div style="margin-top:12px;font-size:14px">Real-time parsing visualization loading…</div></div></div><div class="landing-metrics"><div class="landing-metric"><div class="eyebrow" style="color:rgba(243,240,233,0.54);margin-bottom:8px">Data sanity</div><div style="font-family:'EB Garamond',serif;font-size:34px">99.98%</div></div><div class="landing-metric"><div class="eyebrow" style="color:rgba(243,240,233,0.54);margin-bottom:8px">Recovery rate</div><div style="font-family:'EB Garamond',serif;font-size:34px">12ms avg</div></div><div class="landing-metric"><div class="eyebrow" style="color:rgba(243,240,233,0.54);margin-bottom:8px">Latency</div><div style="font-family:'EB Garamond',serif;font-size:34px">1.2s</div></div></div></div></div></div></div></section>
+    <section class="landing-section landing-cta"><h2>Ready to build the programmable web?</h2><p>Join forward-thinking engineering teams scaling their data operations with ScrapeFlow at RaioQuantum.</p><div class="landing-actions" style="justify-content:center"><a class="button" href="/login">Start Project</a><a class="button-secondary" href="/login">Talk to Sales</a></div></section>
   </main>
-
-  <footer class="landing-footer">
-    <div>
-      <img src="/ui/assets/logo.svg" alt="ScrapeFlow logo" style="height:24px;width:auto;margin-bottom:14px">
-      <p>Precision web extraction for the architectural modern web.</p>
-    </div>
-    <div>
-      <h4>Platform</h4>
-      <div class="landing-footer-links">
-        <a href="/dashboard.html">Features</a>
-        <a href="/projects.html">Infrastructure</a>
-        <a href="/settings.html">Security</a>
-      </div>
-    </div>
-    <div>
-      <h4>Company</h4>
-      <div class="landing-footer-links">
-        <a href="/signup.html">About</a>
-        <a href="/dashboard.html">Changelog</a>
-        <a href="/login.html">Contact</a>
-      </div>
-    </div>
-    <div>
-      <h4>Legal</h4>
-      <div class="landing-footer-links">
-        <a href="/signup.html">Privacy</a>
-        <a href="/signup.html">Terms</a>
-        <a href="/docs" target="_blank" rel="noreferrer">API Status</a>
-      </div>
-      <p style="margin-top:22px">© 2026 ScrapeFlow. Precision Web Extraction.</p>
-    </div>
-  </footer>
+  <footer class="landing-footer"><div><img src="/ui/assets/logo.svg" alt="ScrapeFlow logo" style="height:24px;width:auto;margin-bottom:14px"><p>ScrapeFlow is built by RaioQuantum for precision web extraction.</p></div><div><h4>Platform</h4><div class="landing-footer-links"><a href="/chat">Features</a><a href="/projects">Infrastructure</a><a href="/settings">Security</a></div></div><div><h4>Company</h4><div class="landing-footer-links"><a href="/login">About</a><a href="/chat">Changelog</a><a href="/login">Contact</a></div></div><div><h4>Legal</h4><div class="landing-footer-links"><a href="/login">Privacy</a><a href="/login">Terms</a><a href="/docs" target="_blank" rel="noreferrer">API Status</a></div><p style="margin-top:22px">© 2026 RaioQuantum. ScrapeFlow.</p></div></footer>
 </body>
 </html>
